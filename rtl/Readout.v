@@ -25,8 +25,8 @@ module Readout(
     input SYS_CLK_N,
     input CPU_RESET,   //  active high reset
      
-    output CLK_OUT_1,   // J11
-    output CLK_OUT_2,   // J12
+    output MMCM_OUT_0,   // J11
+    output MMCM_OUT_1,   // J12
     input SW2,         //AA12          
     
     // GBE PORT
@@ -50,10 +50,6 @@ module Readout(
 // reset & clks
 wire reset;
 wire sys_clk;
-wire clk_out_1;
-wire clk_out_2;
-wire clk_out_3;
-wire clk_out_4;
 
 //gig_eth
 wire clk_sgmii_i;
@@ -103,10 +99,10 @@ global_clock_reset clockg_inst (
     // output
     .GLOBAL_RST(reset),      //active High
     .SYS_CLK(sys_clk),    //200MHz
-    .CLK_OUT1(clk_out_1),
-    .CLK_OUT2(clk_out_2),
-    .CLK_OUT3(clk_out_3),
-    .CLK_OUT4(clk_out_4)
+    .CLK_OUT1(),
+    .CLK_OUT2(),
+    .CLK_OUT3(clk_control_interface),
+    .CLK_OUT4()
     );
 
 // reconfigurable mmcm
@@ -123,8 +119,8 @@ mmcm mmcm_inst(
     .RCEN(rcen),    // wire rcen; 
     .RCRDY(rcrdy),       // wire rcrdy; 
     .GLOBAL_RST(GLOBAL_RST), 
-    .CLK_OUT0( CLK_OUT_1 ),  
-    .CLK_OUT1( CLK_OUT_2 ),  
+    .CLK_OUT0( MMCM_OUT_0 ),  
+    .CLK_OUT1( MMCM_OUT_1 ),  
     .CLK_OUT2(  ),   
     .CLK_OUT3(  ),   
     .CLK_OUT4(  ),   
@@ -212,7 +208,7 @@ assign cmd_fifo_empty       = gig_eth_rx_fifo_empty;
 ///////////////////////////////////////////////////////////////////////////////////////
 // control_interface instance
 ///////////////////////////////////////////////////////////////////////////////////////
-assign clk_control_interface = clk_out_3;
+
 
 control_interface control_interface_inst(
     .RESET(reset),

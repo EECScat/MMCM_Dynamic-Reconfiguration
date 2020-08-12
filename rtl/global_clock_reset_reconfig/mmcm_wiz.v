@@ -107,7 +107,7 @@ BUFG BUFG_CLK6 (
 MMCME2_ADV #(
     // "HIGH", "LOW" or "OPTIMIZED"
     .BANDWIDTH("HIGH"),
-    .DIVCLK_DIVIDE(1), // (1 to 106)
+    .DIVCLK_DIVIDE(6), // (1 to 106)
     
     .CLKFBOUT_MULT_F(6), // (2 to 64)
     .CLKFBOUT_PHASE(0.0),
@@ -126,22 +126,22 @@ MMCME2_ADV #(
     // PHASE: (0.0 to 360.0) - This is dependent on the divide value.
     // USE_FINE_PS: (TRUE or FALSE)
     
-    .CLKOUT0_DIVIDE_F(24), // 200 * 6 / 24 = 50M
+    .CLKOUT0_DIVIDE_F(10), // 200 * 6 / 6 / 10 = 20M
     .CLKOUT0_DUTY_CYCLE(0.5),
     .CLKOUT0_PHASE(0.0),
     .CLKOUT0_USE_FINE_PS("FALSE"),
     
-    .CLKOUT1_DIVIDE(20), // 200 * 6 / 20 = 60M
+    .CLKOUT1_DIVIDE(20), // 200 * 6 / 6 / 20 = 10M
     .CLKOUT1_DUTY_CYCLE(0.25),
     .CLKOUT1_PHASE(0.0),
     .CLKOUT1_USE_FINE_PS("FALSE"),
     
-    .CLKOUT2_DIVIDE(24), // 200 * 6 / 24 = 50M
+    .CLKOUT2_DIVIDE(20), // 200 * 6 / 6 / 10 = 20M
     .CLKOUT2_DUTY_CYCLE(0.5),
     .CLKOUT2_PHASE(0.0),
     .CLKOUT2_USE_FINE_PS("FALSE"),
     
-    .CLKOUT3_DIVIDE(24),
+    .CLKOUT3_DIVIDE(20),
     .CLKOUT3_DUTY_CYCLE(0.5),
     .CLKOUT3_PHASE(0.0),
     .CLKOUT3_USE_FINE_PS("FALSE"),
