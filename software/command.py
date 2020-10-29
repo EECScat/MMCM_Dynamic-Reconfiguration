@@ -4,6 +4,7 @@ Created on Wed Oct 28 19:59:54 2020
 
 @author: Shen
 """
+
 import socket
 import traceback
 
@@ -40,6 +41,7 @@ class Cmd(object):
         return buf
 
 if __name__ == "__main__":
+
     s = socket.socket()
     host = '192.168.2.3'
     port = 1024
@@ -54,9 +56,8 @@ if __name__ == "__main__":
             break
     
     cmd = Cmd()
-    
-    ret = cmd.cmd_send_pulse(0x1234)
+
+    ret = cmd.cmd_read_datafifo(0x3)
     print([hex(s) for s in ret])
     
     s.close()
-    
