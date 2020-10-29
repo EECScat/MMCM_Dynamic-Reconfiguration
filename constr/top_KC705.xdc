@@ -84,3 +84,4 @@ set_false_path -to [get_pins -of_objects [get_cells -hierarchical -filter {NAME 
 #set_false_path -from [get_pins -of_objects [get_cells -hierarchical -filter {NAME =~ *sFifoWrEn_reg*}] -filter {NAME =~ *C}]
 #set_false_path -to [get_pins -of_objects [get_cells -hierarchical -filter {NAME =~ *sdes_insti*SIG_PAR_reg[*]}] -filter {NAME =~ *D}]
 #set_false_path -to [get_pins -of_objects [get_cells -hierarchical -filter {NAME =~ *sdes_insti*ERR_reg*}] -filter {NAME =~ *D}]
+
