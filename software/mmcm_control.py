@@ -308,7 +308,7 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         fre = 200.0 * clkb_mult / clk_div / ( (clkout_div_high+clkout_div_low)+ (clkout_frac >> 0x1)*0.125 )
     else:
         fre = 200.0 * clkb_mult / clk_div / (clkout_div_high+clkout_div_low)
-    print "clock", clk_id, "=", fre
+    print( "clock", clk_id, "=", fre)
     #if fre > 101 :
     #    ret = cmd.cmd_write_register(36,0x8002)
     #elif fre > 101 :

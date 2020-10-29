@@ -1,76 +1,62 @@
-from ctypes import *
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 28 19:59:54 2020
 
-def data_calculate(addr_data, addr_mapsbyte,addr_mapsbyte_temp,i2c_data,musk,fcounter,framadd):
-    soname = "./build/command.so"
-    cmdGen = cdll.LoadLibrary(soname)
-    cfun = cmdGen.data_cal
-    # buf = addressof(databuf)
-    cfun(c_char_p(addr_data),c_void_p(addr_mapsbyte),c_void_p(addr_mapsbyte_temp),c_void_p(i2c_data),c_void_p(musk),pointer(fcounter),framadd)
+@author: Shen
+"""
+import socket
+import traceback
 
-def wdtest(musk):
-    soname = "./build/command.so"
-    cmdGen = cdll.LoadLibrary(soname)
-    cfun = cmdGen.wdtest
-    # buf = addressof(databuf)
-    cfun(c_void_p(musk))
-
-class Cmd:
-    soname = "./build/command.so"
-    nmax = 20000
-
+class Cmd(object):
     def __init__(self):
-        self.cmdGen = cdll.LoadLibrary(self.soname)
-        self.buf = create_string_buffer(self.nmax)
+        self.text = "command class"
 
     def cmd_send_pulse(self, mask):
-        cfun = self.cmdGen.cmd_send_pulse
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(mask))
-        return self.buf.raw[0:n]
+        buf = 0x000b0000 | (0x0000ffff & mask)
+        buf = buf.to_bytes(length=4, byteorder='big', signed=False)
+        return buf
 
     def cmd_read_status(self, addr):
-        cfun = self.cmdGen.cmd_read_status
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(addr))
-        return self.buf.raw[0:n]
-
-    def cmd_write_memory(self, addr, aval, nval):
-        cfun = self.cmdGen.cmd_write_memory
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(addr), c_void_p(aval), c_size_t(nval))
-        return self.buf.raw[0:n]
-
-    def cmd_read_memory(self, addr, val):
-        cfun = self.cmdGen.cmd_read_memory
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(addr), c_uint(val))
-        return self.buf.raw[0:n]
+        buf = (0xffff0000 & ((0x8000 + addr) << 16));
+        buf = buf.to_bytes(length=4, byteorder='big', signed=False)
+        return buf
 
     def cmd_write_register(self, addr, val):
-        cfun = self.cmdGen.cmd_write_register
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(addr), c_uint(val))
-        return self.buf.raw[0:n]
+        buf = (0xffff0000 & ((0x0020 + addr) << 16)) | (0x0000ffff & val);
+        buf = buf.to_bytes(length=4, byteorder='big', signed=False)
+        return buf
 
     def cmd_read_register(self, addr):
-        cfun = self.cmdGen.cmd_read_register
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(addr))
-        return self.buf.raw[0:n]
+        buf = (0xffff0000 & ((0x8020 + addr) << 16));
+        buf = buf.to_bytes(length=4, byteorder='big', signed=False)
+        return buf
 
-    def cmd_read_datafifo(self, val):
-        cfun = self.cmdGen.cmd_read_datafifo
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_uint(val))
-        return self.buf.raw[0:n]
-
-    def cmd_write_memory_file(self, file_name):
-        cfun = self.cmdGen.cmd_write_memory_file
-        buf = addressof(self.buf)
-        n = cfun(byref(c_void_p(buf)), c_char_p(file_name))
-        return self.buf.raw[0:n]
+    def cmd_read_datafifo(self, n):
+        buf0 = (0xffff0000 & (0x001a << 16)) | (0x0000ffff & (n>>16))
+        buf0 = buf0.to_bytes(length=4, byteorder='big', signed=False)
+        buf1 = (0xffff0000 & (0x0019 << 16)) | (0x0000ffff & n);
+        buf1 = buf1.to_bytes(length=4, byteorder='big', signed=False)
+        buf = buf0 + buf1
+        return buf
 
 if __name__ == "__main__":
+    s = socket.socket()
+    host = '192.168.2.3'
+    port = 1024
+    print("connecting")
+    s.connect((host,port))
+    s.settimeout(0.5)
+    print("connected")
+    while True:
+        try :
+            s.recv(1024)
+        except socket.timeout:
+            break
+    
     cmd = Cmd()
-    ret = cmd.write_register(1, 0x5a5a)
-    print [hex(ord(s)) for s in ret]
+    
+    ret = cmd.cmd_send_pulse(0x1234)
+    print([hex(s) for s in ret])
+    
+    s.close()
+    
