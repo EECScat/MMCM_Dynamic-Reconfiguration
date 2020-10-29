@@ -7,7 +7,7 @@ Delay=0.001
 ###################################################
 # functions for mmcm control
 ###################################################
-def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high,clkout_div_low,duty_50_force, clkout_frac, phase_mux, phase_dalay):
+def mmcm_reconfig(cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high,clkout_div_low,duty_50_force, clkout_frac, phase_mux, phase_dalay):
     # readme
     # clock = clk * clkb_mult.clkb_frac / clk_div / (clkout_div_high+clkout_div_low).clkout_frac
     # clkb_mult : 2 to 64
@@ -34,13 +34,10 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     # power bits
     #
     ret = cmd.cmd_write_register(0,0xFFFF)
-    s.sendall(ret)
     # time.sleep(Delay)
     ret = cmd.cmd_write_register(1,0x0000)
-    s.sendall(ret)
     # time.sleep(Delay)
     ret = cmd.cmd_write_register(2,0x0028)
-    s.sendall(ret)
     # time.sleep(Delay)
 
     #
@@ -62,11 +59,11 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     clkout_reg_1_hex = (clkout_reg_1) & 0x0FFF
     # print hex(clkout_reg_1_hex)
     ret = cmd.cmd_write_register(3,clkout_reg_1_hex)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(4,0x1000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     rom_id = 5
@@ -84,7 +81,6 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         ret = cmd.cmd_write_register(rom_id,0x0006)
     elif clk_id == 6:
         ret = cmd.cmd_write_register(rom_id,0x0012)
-    s.sendall(ret)
     # time.sleep(Delay)
 
     #
@@ -103,7 +99,6 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     else:
         clkout_reg_2_hex = (clkout_reg_2) & 0x00FF
     ret = cmd.cmd_write_register(6,clkout_reg_2_hex)
-    s.sendall(ret)
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     if clk_id == 0:
@@ -112,7 +107,6 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         ret = cmd.cmd_write_register(7,0xC000)
     else:
         ret = cmd.cmd_write_register(7,0xFC00)
-    s.sendall(ret)
     # time.sleep(Delay)
     # DRP Address
     rom_id = 8
@@ -130,7 +124,6 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         ret = cmd.cmd_write_register(rom_id,0x0007)
     elif clk_id == 6:
         ret = cmd.cmd_write_register(rom_id,0x0013)
-    s.sendall(ret)
     # time.sleep(Delay)
 
     #
@@ -145,15 +138,12 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     # mask
     div_reg = (div_reg) & 0x3fff
     ret = cmd.cmd_write_register(9,div_reg)
-    s.sendall(ret)
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(10,0xC000)
-    s.sendall(ret)
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(11,0x0016)
-    s.sendall(ret)
     # time.sleep(Delay)
 
     #
@@ -166,15 +156,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     # mask
     clkb_reg_1_hex = (clkb_reg_1) & 0x0FFF
     ret = cmd.cmd_write_register(12,clkb_reg_1_hex)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(13,0x1000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(14,0x0014)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -187,15 +177,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     # mask
     clkb_reg_2 = (clkb_reg_2) & 0x78C0
     ret = cmd.cmd_write_register(15,clkb_reg_2)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(16,0x8000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(17,0x0015)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -204,15 +194,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     lock_reg = lock_table[clkb_mult-1];
     lock_reg1 = (lock_reg >> 20) & 0x03FF
     ret = cmd.cmd_write_register(18,lock_reg1)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(19,0xFC00)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(20,0x0018)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -220,15 +210,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     #
     lock_reg2 = (((lock_reg >> 30) & 0x001F) << 10) + (lock_reg & 0x03FF)
     ret = cmd.cmd_write_register(21,lock_reg2)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(22,0x8000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(23,0x0019)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -236,15 +226,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     #
     lock_reg3 = (((lock_reg >> 35) & 0x001F) << 10) + ((lock_reg >> 10) & 0x03FF)
     ret = cmd.cmd_write_register(24,lock_reg3)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(25,0x8000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(26,0x001A)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -260,15 +250,15 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         filter_reg = filter_table_optimized[clkb_mult-1]
     filter_reg1 = (((filter_reg >> 9) & 0x0001) << 15) + (((filter_reg >> 7) & 0x0003) << 11) + (((filter_reg >> 6) & 0x0001) << 8)
     ret = cmd.cmd_write_register(27,filter_reg1)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(28,0x66FF)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(29,0x004E)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
@@ -276,28 +266,28 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     #
     filter_reg2 = (((filter_reg >> 5) & 0x0001) << 15) + (((filter_reg >> 3) & 0x0003) << 11) + (((filter_reg >> 1) & 0x0003) << 7) + (((filter_reg) & 0x0001) << 4)
     ret = cmd.cmd_write_register(30,filter_reg2)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # bit mask : refer to datasheet
     ret = cmd.cmd_write_register(31,0x666F)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     # DRP Address
     ret = cmd.cmd_write_register(32,0x004F)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
     #
     # power bits
     #
     ret = cmd.cmd_write_register(33,0x0000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     ret = cmd.cmd_write_register(34,0x0000)
-    s.sendall(ret)
+
     # time.sleep(Delay)
     ret = cmd.cmd_write_register(35,0x0028)
-    s.sendall(ret)
+
     # time.sleep(Delay)
 
 
@@ -308,7 +298,7 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
         fre = 200.0 * clkb_mult / clk_div / ( (clkout_div_high+clkout_div_low)+ (clkout_frac >> 0x1)*0.125 )
     else:
         fre = 200.0 * clkb_mult / clk_div / (clkout_div_high+clkout_div_low)
-    print "clock", clk_id, "=", fre
+    print("clock", clk_id, "=", fre)
     #if fre > 101 :
     #    ret = cmd.cmd_write_register(36,0x8002)
     #elif fre > 101 :
@@ -323,7 +313,7 @@ def mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div_high
     # RCEN
     #
     ret = cmd.cmd_send_pulse(0x01)
-    s.sendall(ret)
+
     time.sleep(Delay)
     return 0
 
@@ -666,11 +656,15 @@ filter_table_optimized = [
 0b0011110000]
 
 if __name__ == "__main__":
-    host = '192.168.2.3'
-    port = 1024
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host,port))
+
     cmd = Cmd()
-    # mmcm_reconfig(s, cmd, clkb_mult, clkb_frac, clk_div, clk_id, clkout_div, clkout_frac)
-    mmcm_reconfig(s, cmd, 0x6, 0x0, 0x1, 0x0, 0x20, 0x0)
-    s.close()
+    try:
+        cmd.eth_init('192.168.2.3',1024)
+        mmcm_reconfig(cmd, 0x6, 0x0, 0x6, 0x1, 0x05,0x05,0x0, 0x0, 0x0, 0x06)
+    except:
+        print("error information:")
+        traceback.print_exc()
+        cmd.eth_close()
+    else:
+        cmd.eth_close()
+
