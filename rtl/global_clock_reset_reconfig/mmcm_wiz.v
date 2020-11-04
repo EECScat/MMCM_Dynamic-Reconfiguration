@@ -107,7 +107,7 @@ BUFG BUFG_CLK6 (
 MMCME2_ADV #(
     // "HIGH", "LOW" or "OPTIMIZED"
     .BANDWIDTH("HIGH"),
-    .DIVCLK_DIVIDE(6), // (1 to 106)
+    .DIVCLK_DIVIDE(3), // (1 to 106)
     
     .CLKFBOUT_MULT_F(6), // (2 to 64)
     .CLKFBOUT_PHASE(0.0),
